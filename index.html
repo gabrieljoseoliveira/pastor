@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<title>Homenagem ao Pastor - Crianças da Igreja</title>
+
+		<!-- GSAP para animações suaves -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				font-family: "Fredoka One", "Comic Sans MS", cursive;
+				overflow: hidden;
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				height: 100vh;
+				position: relative;
+			}
+
+			/* Animação de fundo com balões */
+			@keyframes float {
+				0%,
+				100% {
+					transform: translateY(0) rotate(0deg);
+				}
+				50% {
+					transform: translateY(-20px) rotate(5deg);
+				}
+			}
+
+			/* Animação para foto do pastor */
+			@keyframes pastorFloat {
+				0%,
+				100% {
+					transform: translateY(0) rotate(-3deg);
+				}
+				50% {
+					transform: translateY(-15px) rotate(3deg);
+				}
+			}
+
+			@keyframes pulse {
+				0%,
+				100% {
+					box-shadow: 0 0 20px rgba(255, 255, 255, 0.5),
+						0 0 40px rgba(255, 255, 255, 0.3), 0 10px 30px rgba(0, 0, 0, 0.3);
+				}
+				50% {
+					box-shadow: 0 0 30px rgba(255, 255, 255, 0.8),
+						0 0 60px rgba(255, 255, 255, 0.5), 0 15px 40px rgba(0, 0, 0, 0.4);
+				}
+			}
+
+			.background-decoration {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				pointer-events: none;
+				overflow: hidden;
+			}
+
+			.balloon {
+				position: absolute;
+				width: 60px;
+				height: 80px;
+				border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+				animation: float 3s ease-in-out infinite;
+				opacity: 0.3;
+			}
+
+			.balloon:nth-child(1) {
+				background: #ff6b6b;
+				top: 10%;
+				left: 10%;
+				animation-delay: 0s;
+			}
+			.balloon:nth-child(2) {
+				background: #4ecdc4;
+				top: 20%;
+				left: 80%;
+				animation-delay: 0.5s;
+			}
+			.balloon:nth-child(3) {
+				background: #ffe66d;
+				top: 60%;
+				left: 15%;
+				animation-delay: 1s;
+			}
+			.balloon:nth-child(4) {
+				background: #95e1d3;
+				top: 70%;
+				left: 85%;
+				animation-delay: 1.5s;
+			}
+			.balloon:nth-child(5) {
+				background: #ff9ff3;
+				top: 40%;
+				left: 50%;
+				animation-delay: 2s;
+			}
+
+			/* Container principal */
+			.container {
+				position: relative;
+				width: 100%;
+				height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				z-index: 1;
+			}
+
+			/* Título da página */
+			.title {
+				position: fixed;
+				top: 250px;
+				left: 30px;
+				text-align: center;
+				color: white;
+				text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+				z-index: 10;
+				animation: titleBounce 2s ease-in-out infinite;
+				max-width: auto;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 15px;
+			}
+			.title h1 {
+				font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+				margin-bottom: 0;
+				letter-spacing: 1px;
+				line-height: 1.3;
+			}
+
+			.title p {
+				font-size: clamp(1.1rem, 2vw, 1.5rem);
+				font-family: "Arial", sans-serif;
+				font-weight: normal;
+				line-height: 1.4;
+				margin: 0;
+			}
+
+			@keyframes titleBounce {
+				0%,
+				100% {
+					transform: translateY(0);
+				}
+				50% {
+					transform: translateY(-10px);
+				}
+			}
+
+			/* Foto do Pastor */
+			.pastor-photo {
+				width: 150px;
+				height: 150px;
+				border-radius: 50%;
+				object-fit: cover;
+				border: 6px solid white;
+				box-shadow: 0 0 30px rgba(255, 255, 255, 0.6),
+					0 0 50px rgba(255, 255, 255, 0.4), 0 15px 40px rgba(0, 0, 0, 0.4);
+				animation: pastorFloat 3s ease-in-out infinite,
+					pulse 2s ease-in-out infinite;
+				flex-shrink: 0;
+				animation-delay: 0.3s;
+			}
+
+			.title-text {
+				flex: 1;
+			}
+
+			/* Container de vídeos */
+			.video-container {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100vh;
+				perspective: 1000px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.video-wrapper {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				opacity: 0;
+				transform: translateX(100%) scale(0.7);
+			}
+
+			.video-wrapper.active {
+				opacity: 1;
+				z-index: 5;
+			}
+
+			video {
+				width: auto;
+				height: 100vh;
+				max-width: 100vw;
+				object-fit: contain;
+				border-radius: 15px;
+				box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+				border: 6px solid white;
+			}
+
+			/* Contador de vídeos */
+			.video-counter {
+				position: fixed;
+				top: 20px;
+				right: 20px;
+				background: rgba(255, 255, 255, 0.95);
+				padding: 12px 20px;
+				border-radius: 50px;
+				color: #667eea;
+				font-size: 1.1rem;
+				font-weight: bold;
+				box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+				z-index: 10;
+			}
+
+			/* Controles */
+			.controls {
+				position: fixed;
+				bottom: 30px;
+				left: 50%;
+				transform: translateX(-50%);
+				display: flex;
+				gap: 20px;
+				z-index: 10;
+			}
+
+			.control-btn {
+				background: white;
+				border: none;
+				width: 60px;
+				height: 60px;
+				border-radius: 50%;
+				cursor: pointer;
+				font-size: 24px;
+				color: #667eea;
+				box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+				transition: all 0.3s ease;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.control-btn:hover {
+				transform: scale(1.1);
+				box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+			}
+
+			.control-btn:active {
+				transform: scale(0.95);
+			}
+
+			.play-btn {
+				width: 80px;
+				height: 80px;
+				font-size: 32px;
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: white;
+			}
+
+			/* Indicadores de progresso */
+			.progress-dots {
+				position: fixed;
+				bottom: 110px;
+				left: 50%;
+				transform: translateX(-50%);
+				display: flex;
+				gap: 12px;
+				z-index: 10;
+			}
+
+			.dot {
+				width: 12px;
+				height: 12px;
+				border-radius: 50%;
+				background: rgba(255, 255, 255, 0.5);
+				cursor: pointer;
+				transition: all 0.3s ease;
+			}
+
+			.dot.active {
+				background: white;
+				transform: scale(1.3);
+				box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+			}
+
+			.dot:hover {
+				transform: scale(1.2);
+			}
+
+			/* Mensagem de boas-vindas */
+			.welcome-message {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				text-align: center;
+				color: white;
+				z-index: 15;
+				background: rgba(0, 0, 0, 0.5);
+				padding: 40px;
+				border-radius: 30px;
+				backdrop-filter: blur(10px);
+			}
+
+			.welcome-message h2 {
+				font-size: clamp(1.5rem, 4vw, 2.5rem);
+				margin-bottom: 20px;
+			}
+
+			.welcome-message p {
+				font-size: clamp(1rem, 2vw, 1.3rem);
+				font-family: "Arial", sans-serif;
+				margin-bottom: 30px;
+			}
+
+			.start-btn {
+				background: linear-gradient(135deg, #ff6b6b 0%, #ff9ff3 100%);
+				border: none;
+				color: white;
+				padding: 20px 50px;
+				border-radius: 50px;
+				font-size: 1.5rem;
+				font-family: "Fredoka One", cursive;
+				cursor: pointer;
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+				transition: all 0.3s ease;
+			}
+
+			.start-btn:hover {
+				transform: scale(1.05);
+				box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+			}
+
+			.hidden {
+				display: none;
+			}
+
+			/* Confetes animados */
+			@keyframes confetti-fall {
+				0% {
+					transform: translateY(-100vh) rotate(0deg);
+				}
+				100% {
+					transform: translateY(100vh) rotate(720deg);
+				}
+			}
+
+			.confetti {
+				position: absolute;
+				width: 10px;
+				height: 10px;
+				background: #ff6b6b;
+				opacity: 0;
+				pointer-events: none;
+			}
+
+			/* Responsividade */
+			@media (max-width: 768px) {
+				.title h1 {
+					font-size: 1.2rem;
+				}
+				.title p {
+					font-size: 1rem;
+				}
+				.title {
+					top: 20px;
+					gap: 12px;
+					max-width: 400px;
+				}
+				.pastor-photo {
+					width: 120px;
+					height: 120px;
+					border: 5px solid white;
+				}
+
+				.video-counter {
+					top: 15px;
+					right: 15px;
+					padding: 10px 18px;
+					font-size: 0.95rem;
+				}
+
+				.controls {
+					bottom: 20px;
+					gap: 15px;
+				}
+				.control-btn {
+					width: 50px;
+					height: 50px;
+					font-size: 20px;
+				}
+				.play-btn {
+					width: 65px;
+					height: 65px;
+					font-size: 28px;
+				}
+				.progress-dots {
+					bottom: 90px;
+				}
+
+				video {
+					border-radius: 12px;
+					border: 4px solid white;
+				}
+			}
+
+			@media (max-width: 480px) {
+				.title {
+					gap: 10px;
+					max-width: 300px;
+					top: 15px;
+				}
+				.pastor-photo {
+					width: 90px;
+					height: 90px;
+					border: 4px solid white;
+				}
+				.title h1 {
+					font-size: 1rem;
+				}
+				.title p {
+					font-size: 0.85rem;
+				}
+				.controls {
+					gap: 12px;
+				}
+				.control-btn {
+					width: 45px;
+					height: 45px;
+					font-size: 18px;
+				}
+				.play-btn {
+					width: 60px;
+					height: 60px;
+					font-size: 24px;
+				}
+				.welcome-message {
+					padding: 30px 20px;
+				}
+				.start-btn {
+					padding: 15px 35px;
+					font-size: 1.2rem;
+				}
+				.progress-dots {
+					bottom: 80px;
+				}
+				video {
+					border-radius: 10px;
+					border: 3px solid white;
+				}
+			}
+
+			/* Animação de carregamento */
+			.loading {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				color: white;
+				font-size: 1.5rem;
+				z-index: 20;
+			}
+
+			.loading-spinner {
+				border: 5px solid rgba(255, 255, 255, 0.3);
+				border-top: 5px solid white;
+				border-radius: 50%;
+				width: 50px;
+				height: 50px;
+				animation: spin 1s linear infinite;
+				margin: 0 auto 20px;
+			}
+
+			@keyframes spin {
+				0% {
+					transform: rotate(0deg);
+				}
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Decoração de fundo -->
+		<div class="background-decoration">
+			<div class="balloon"></div>
+			<div class="balloon"></div>
+			<div class="balloon"></div>
+			<div class="balloon"></div>
+			<div class="balloon"></div>
+		</div>
+
+		<!-- Container principal -->
+		<div class="container">
+			<!-- Título -->
+			<div class="title">
+				<img
+					src="pastor.png"
+					alt="Pastor"
+					class="pastor-photo" />
+				<div class="title-text">
+					<h1>🎉 Homenagem ao Pastor 🎉</h1>
+					<p>Com carinho das crianças da igreja</p>
+				</div>
+			</div>
+			<!-- Contador de vídeos -->
+			<div class="video-counter">
+				<span id="currentVideo">1</span> / <span id="totalVideos">8</span>
+			</div>
+
+			<!-- Mensagem de boas-vindas -->
+			<div
+				class="welcome-message"
+				id="welcomeMessage">
+				<h2>✨ Bem-vindo! ✨</h2>
+				<p
+					>Prepare-se para assistir lindas homenagens<br />feitas com muito
+					amor!</p
+				>
+				<button
+					class="start-btn"
+					id="startBtn"
+					>🎬 Começar</button
+				>
+			</div>
+
+			<!-- Container de vídeos -->
+			<div
+				class="video-container"
+				id="videoContainer">
+				<div
+					class="video-wrapper"
+					data-index="0">
+					<video
+						id="video0"
+						preload="metadata">
+						<source
+							src="videos/1.mp4"
+							type="video/mp4" />
+					</video>
+				</div>
+				<div
+					class="video-wrapper"
+					data-index="1">
+					<video
+						id="video1"
+						preload="metadata">
+						<source
+							src="videos/2.mp4"
+							type="video/mp4" />
+					</video>
+				</div>
+				<div
+					class="video-wrapper"
+					data-index="2">
+					<video
+						id="video2"
+						preload="metadata">
+						<source
+							src="videos/3.mp4"
+							type="video/mp4" />
+					</video>
+				</div>
+				<div
+					class="video-wrapper"
+					data-index="3">
+					<video
+						id="video3"
+						preload="metadata">
+						<source
+							src="videos/4.mp4"
+							type="video/mp4" />
+					</video>
+				</div>
+				<div
+					class="video-wrapper"
+					data-index="4">
+					<video
+						id="video4"
+						preload="metadata">
+						<source
+							src="videos/5.mp4"
+							type="video/mp4" />
+					</video>
+				</div>
+				<div
+					class="video-wrapper"
+					data-index="5">
+					<video
+						id="video5"
+						preload="metadata">
+						<source
+							src="videos/6.mp4"
+							type="video/mp4" />
+					</video>
+				</div>
+				<div
+					class="video-wrapper"
+					data-index="6">
+					<video
+						id="video6"
+						preload="metadata">
+						<source
+							src="videos/7.mp4"
+							type="video/mp4" />
+					</video>
+				</div>
+				<div
+					class="video-wrapper"
+					data-index="7">
+					<video
+						id="video7"
+						preload="metadata">
+						<source
+							src="videos/8.mp4"
+							type="video/mp4" />
+					</video>
+				</div>
+			</div>
+
+			<!-- Controles -->
+			<div
+				class="controls hidden"
+				id="controls">
+				<button
+					class="control-btn"
+					id="prevBtn"
+					title="Anterior"
+					>⏮️</button
+				>
+				<button
+					class="control-btn play-btn"
+					id="playBtn"
+					title="Reproduzir/Pausar"
+					>▶️</button
+				>
+				<button
+					class="control-btn"
+					id="nextBtn"
+					title="Próximo"
+					>⏭️</button
+				>
+				<button
+					class="control-btn"
+					id="restartBtn"
+					title="Reiniciar"
+					>🔄</button
+				>
+			</div>
+
+			<!-- Indicadores de progresso -->
+			<div
+				class="progress-dots hidden"
+				id="progressDots">
+				<div
+					class="dot active"
+					data-index="0"></div>
+				<div
+					class="dot"
+					data-index="1"></div>
+				<div
+					class="dot"
+					data-index="2"></div>
+				<div
+					class="dot"
+					data-index="3"></div>
+				<div
+					class="dot"
+					data-index="4"></div>
+				<div
+					class="dot"
+					data-index="5"></div>
+				<div
+					class="dot"
+					data-index="6"></div>
+				<div
+					class="dot"
+					data-index="7"></div>
+			</div>
+		</div>
+
+		<script>
+			// Variáveis globais
+			let currentVideoIndex = 0;
+			const totalVideos = 8;
+			let isPlaying = false;
+			let videos = [];
+			let videoWrappers = [];
+
+			// Inicialização
+			document.addEventListener("DOMContentLoaded", function () {
+				// Coletar todos os elementos de vídeo
+				for (let i = 0; i < totalVideos; i++) {
+					videos.push(document.getElementById(`video${i}`));
+					videoWrappers.push(document.querySelector(`[data-index="${i}"]`));
+				}
+
+				// Event listeners
+				document
+					.getElementById("startBtn")
+					.addEventListener("click", startPresentation);
+				document
+					.getElementById("playBtn")
+					.addEventListener("click", togglePlay);
+				document
+					.getElementById("prevBtn")
+					.addEventListener("click", previousVideo);
+				document.getElementById("nextBtn").addEventListener("click", nextVideo);
+				document
+					.getElementById("restartBtn")
+					.addEventListener("click", restartPresentation);
+
+				// Dots de progresso
+				document.querySelectorAll(".dot").forEach((dot) => {
+					dot.addEventListener("click", function () {
+						const index = parseInt(this.getAttribute("data-index"));
+						goToVideo(index);
+					});
+				});
+
+				// Auto-play no fim do vídeo
+				videos.forEach((video, index) => {
+					video.addEventListener("ended", function () {
+						if (index < totalVideos - 1) {
+							nextVideo();
+						} else {
+							// Fim da apresentação
+							isPlaying = false;
+							document.getElementById("playBtn").textContent = "▶️";
+						}
+					});
+
+					// Prevenir erros de carregamento
+					video.addEventListener("error", function () {
+						console.error(`Erro ao carregar vídeo ${index + 1}`);
+					});
+				});
+			});
+
+			// Função para iniciar a apresentação
+			function startPresentation() {
+				// Animar saída da mensagem de boas-vindas
+				gsap.to("#welcomeMessage", {
+					opacity: 0,
+					scale: 0.8,
+					duration: 0.5,
+					ease: "back.in",
+					onComplete: function () {
+						document.getElementById("welcomeMessage").classList.add("hidden");
+					},
+				});
+
+				// Mostrar controles
+				document.getElementById("controls").classList.remove("hidden");
+				document.getElementById("progressDots").classList.remove("hidden");
+
+				// Animar entrada dos controles
+				gsap.from("#controls", {
+					y: 100,
+					opacity: 0,
+					duration: 0.8,
+					ease: "back.out",
+					delay: 0.3,
+				});
+
+				gsap.from("#progressDots", {
+					y: 100,
+					opacity: 0,
+					duration: 0.8,
+					ease: "back.out",
+					delay: 0.4,
+				});
+
+				// Criar confetes
+				createConfetti();
+
+				// Iniciar primeiro vídeo
+				setTimeout(() => {
+					showVideo(0);
+					playCurrentVideo();
+				}, 800);
+			}
+
+			// Função para mostrar vídeo com animação
+			function showVideo(index) {
+				const previousIndex = currentVideoIndex;
+				currentVideoIndex = index;
+
+				// Pausar vídeo anterior
+				if (videos[previousIndex]) {
+					videos[previousIndex].pause();
+				}
+
+				// Animar saída do vídeo anterior
+				if (previousIndex !== index && videoWrappers[previousIndex]) {
+					gsap.to(videoWrappers[previousIndex], {
+						x: "-100%",
+						scale: 0.7,
+						opacity: 0,
+						duration: 0.8,
+						ease: "power2.inOut",
+						onComplete: function () {
+							videoWrappers[previousIndex].classList.remove("active");
+							gsap.set(videoWrappers[previousIndex], { x: "100%" });
+						},
+					});
+				}
+
+				// Animar entrada do novo vídeo
+				videoWrappers[index].classList.add("active");
+
+				gsap.fromTo(
+					videoWrappers[index],
+					{ x: "100%", scale: 0.7, opacity: 0 },
+					{
+						x: "0%",
+						scale: 1,
+						opacity: 1,
+						duration: 1,
+						ease: "power2.out",
+						onComplete: function () {
+							// Pequena animação de "pop" ao centralizar
+							gsap.to(videoWrappers[index], {
+								scale: 1.05,
+								duration: 0.2,
+								yoyo: true,
+								repeat: 1,
+								ease: "power1.inOut",
+							});
+						},
+					},
+				);
+
+				// Atualizar contador
+				document.getElementById("currentVideo").textContent = index + 1;
+
+				// Atualizar dots
+				document.querySelectorAll(".dot").forEach((dot) => {
+					dot.classList.remove("active");
+				});
+				document
+					.querySelector(`.dot[data-index="${index}"]`)
+					.classList.add("active");
+			}
+
+			// Função para reproduzir vídeo atual
+			function playCurrentVideo() {
+				const video = videos[currentVideoIndex];
+				video
+					.play()
+					.then(() => {
+						isPlaying = true;
+						document.getElementById("playBtn").textContent = "⏸️";
+					})
+					.catch((error) => {
+						console.error("Erro ao reproduzir vídeo:", error);
+					});
+			}
+
+			// Toggle play/pause
+			function togglePlay() {
+				const video = videos[currentVideoIndex];
+
+				if (isPlaying) {
+					video.pause();
+					isPlaying = false;
+					document.getElementById("playBtn").textContent = "▶️";
+				} else {
+					playCurrentVideo();
+				}
+			}
+
+			// Próximo vídeo
+			function nextVideo() {
+				if (currentVideoIndex < totalVideos - 1) {
+					showVideo(currentVideoIndex + 1);
+					if (isPlaying) {
+						setTimeout(() => playCurrentVideo(), 1000);
+					}
+				}
+			}
+
+			// Vídeo anterior
+			function previousVideo() {
+				if (currentVideoIndex > 0) {
+					showVideo(currentVideoIndex - 1);
+					if (isPlaying) {
+						setTimeout(() => playCurrentVideo(), 1000);
+					}
+				}
+			}
+
+			// Ir para vídeo específico
+			function goToVideo(index) {
+				if (index !== currentVideoIndex) {
+					showVideo(index);
+					if (isPlaying) {
+						setTimeout(() => playCurrentVideo(), 1000);
+					}
+				}
+			}
+
+			// Reiniciar apresentação
+			function restartPresentation() {
+				videos[currentVideoIndex].pause();
+				videos[currentVideoIndex].currentTime = 0;
+				showVideo(0);
+				playCurrentVideo();
+			}
+
+			// Criar confetes
+			function createConfetti() {
+				const colors = [
+					"#ff6b6b",
+					"#4ecdc4",
+					"#ffe66d",
+					"#95e1d3",
+					"#ff9ff3",
+					"#a8e6cf",
+				];
+
+				for (let i = 0; i < 50; i++) {
+					const confetti = document.createElement("div");
+					confetti.className = "confetti";
+					confetti.style.left = Math.random() * 100 + "%";
+					confetti.style.background =
+						colors[Math.floor(Math.random() * colors.length)];
+					confetti.style.animationDelay = Math.random() * 3 + "s";
+					confetti.style.animationDuration = Math.random() * 3 + 2 + "s";
+					document.body.appendChild(confetti);
+
+					gsap.fromTo(
+						confetti,
+						{
+							y: -100,
+							rotation: 0,
+							opacity: 0,
+						},
+						{
+							y: window.innerHeight + 100,
+							rotation: 720,
+							opacity: 1,
+							duration: Math.random() * 3 + 2,
+							ease: "none",
+							delay: Math.random() * 2,
+							onComplete: function () {
+								confetti.remove();
+							},
+						},
+					);
+				}
+			}
+
+			// Atalhos de teclado
+			document.addEventListener("keydown", function (e) {
+				if (
+					document.getElementById("welcomeMessage").classList.contains("hidden")
+				) {
+					switch (e.key) {
+						case "ArrowLeft":
+							previousVideo();
+							break;
+						case "ArrowRight":
+							nextVideo();
+							break;
+						case " ":
+							e.preventDefault();
+							togglePlay();
+							break;
+						case "r":
+						case "R":
+							restartPresentation();
+							break;
+					}
+				}
+			});
+		</script>
+	</body>
+</html>
